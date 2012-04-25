@@ -149,7 +149,7 @@ DEPENDENCIES
   execjs
   jquery-rails
   mysql2
-  pg (= 0.12.2)
+  pg
   rails (= 3.2.3)
   rspec-rails (= 2.9.0)
   sass-rails (~> 3.2.3)
