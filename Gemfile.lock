@@ -29,7 +29,9 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.2.7)
+    annotate (2.4.1.beta1)
     arel (3.0.2)
+    bcrypt-ruby (3.0.1)
     bootstrap-sass (2.0.0)
     builder (3.0.0)
     capybara (1.1.2)
@@ -48,6 +50,14 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.3.1)
+    columnize (0.3.6)
+    debugger (1.1.3)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.1.1)
+      debugger-ruby_core_source (~> 1.1.2)
+    debugger-linecache (1.1.1)
+      debugger-ruby_core_source (>= 1.1.1)
+    debugger-ruby_core_source (1.1.2)
     diff-lcs (1.1.3)
     erubis (2.7.0)
     execjs (1.3.0)
@@ -159,9 +169,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate (~> 2.4.1.beta)
+  bcrypt-ruby (= 3.0.1)
   bootstrap-sass (= 2.0.0)
   capybara (= 1.1.2)
   coffee-rails (~> 3.2.1)
+  debugger
   execjs
   guard-rspec (= 0.5.5)
   guard-spork (= 0.3.2)
