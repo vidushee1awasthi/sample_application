@@ -36,7 +36,9 @@ group :test do
   gem 'rb-inotify', '0.8.8'
   gem 'libnotify', '0.5.9'
   gem 'launchy'
+  gem 'factory_girl_rails', '1.4.0'
 end
+
 
 group :production do
   gem 'pg'
