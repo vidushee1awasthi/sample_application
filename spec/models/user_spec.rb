@@ -12,24 +12,32 @@
 require 'spec_helper'
 
 describe User do
-
   before do
     @user = User.new(name: "Example User", email: "user@example.com",
       password: "foobar", password_confirmation: "foobar")
 
   end
+  it {should respond_to(:microposts)}
+  it {should respond_to(:feed)}
   it {should respond_to(:admin)}
   it {should respond_to(:authenticate)}
 
   it {should be_valid}
   it {should_not be_admin}
 
+
+
   describe "with admin attribute set to 'true'" do
     before {@user.toggle!(:admin)}
-     it {should be_admin}
+    it {should be_admin}
   end
+  
+
+
 
   subject { @user }
+
+
 
   it {should respond_to(:name)}
   it {should respond_to(:email)}
@@ -38,15 +46,9 @@ describe User do
   it {should respond_to(:password_confirmation) }
   it {should respond_to(:remember_token)}
   it {should respond_to(:authenticate)}
-  
+  it {should respond_to(:microposts)}
   it {should be_valid}
-
-
-  describe "when name is too long" do
-    before { @user.name = "a" * 51}
-    it { should_not be_valid }
-  end
-
+  
   describe "when email address is already taken" do
     before do
       user_with_same_email = @user.dup
@@ -93,9 +95,49 @@ describe User do
 
   end
 
-    describe "remember token" do
-      before { @user.save }
-      its(:remember_token) { should_not be_blank }
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
+  end
+
+  describe "micropost associations" do
+
+    before { @user.save }
+    let!(:older_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
     end
+    let!(:newer_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
+    end
+
+    it "should have the right microposts in the right order" do
+      @user.microposts.should == [newer_micropost, older_micropost]
+    end
+
+
+    it "should destroy associated microposts" do
+      microposts = @user.microposts
+      @user.destroy
+      microposts.each do |micropost|
+        Micropost.find_by_id(micropost.id).should be_nil
+      end
+    end
+
+
+    describe "status" do
+      let(:unfollowed_post) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+      end
+      its(:feed) {should include(newer_micropost)}
+      its(:feed) {should include(older_micropost)}
+      its(:feed) {should_not include(unfollowed_post)}
+    end
+  end
 end
- 
+
+
+
+
+
+
+

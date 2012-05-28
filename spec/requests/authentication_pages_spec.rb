@@ -3,9 +3,10 @@ require 'spec_helper'
 describe "Authentication" do
 
   subject {page}
-
+  let(:user) {FactoryGirl.create(:user)}
   describe "signin" do
     before {visit signin_path}
+
 
     describe "with invalid information" do
       before { click_button "Sign in"}
@@ -19,7 +20,6 @@ describe "Authentication" do
     end
   
     describe "with valid information" do
-      let(:user) {FactoryGirl.create(:user)}
       before {sign_in(user)}
       
       it {should have_selector('title', text: user.name)}
@@ -38,8 +38,18 @@ describe "Authentication" do
 
 
   describe "authorization" do
-    let(:user) { FactoryGirl.create(:user) }
     describe "for non-signed-in users" do
+
+      describe "in the Microposts controller" do
+        describe "submitting to the create action" do
+          before  {post microposts_path}
+          specify {response.should redirect_to(signin_path)}
+        end
+        describe "submitting to the destroy action" do
+          before {delete micropost_path(FactoryGirl.create(:micropost))}
+          specify {response.should redirect_to(signin_path)}
+        end
+      end
 
       describe "when attempting to visit a protected page" do
         before do
@@ -78,7 +88,6 @@ describe "Authentication" do
   end
 
   describe "as wrong user" do
-    let(:user) {FactoryGirl.create(:user)}
     let(:wrong_user) {FactoryGirl.create(:user, email: "wrong@example.com") }
     before { sign_in user }
 
@@ -93,7 +102,6 @@ describe "Authentication" do
   end
 
   describe "as non-admin user" do
-    let(:user) { FactoryGirl.create(:user) }
     let(:non_admin) { FactoryGirl.create(:user) }
 
     before { sign_in non_admin }
@@ -105,7 +113,6 @@ describe "Authentication" do
   end
 
   describe "when attempting to visit a protected page" do
-    let(:user) { FactoryGirl.create(:user) }
     before do
       visit edit_user_path(user)
       fill_in "session_email",    with: user.email
@@ -133,5 +140,9 @@ describe "Authentication" do
       end
     end
   end
-
+  describe "when user not sign_in" do
+     before {visit root_path}
+    it {should_not have_link('Profile', href: edit_user_path(user))}
+    it {should_not have_link('Settings', href: '#')}
+  end
 end
