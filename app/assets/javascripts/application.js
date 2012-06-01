@@ -14,3 +14,35 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require_tree .
+
+jQuery(document).ready(function() {
+
+  jQuery.fn.content_count_down = function() {
+    var content_size = jQuery('#micropost_content').val().length;
+    var difference = 140 - content_size;
+    var display_message = 'Now You can type ' + difference + ' characters';
+    jQuery('#content_text').html(display_message);
+  }
+
+  jQuery(this).content_count_down();
+    
+  jQuery('#micropost_content').keyup(function(){
+    jQuery(this).content_count_down();
+  })
+
+  /*jQuery('#micropost_content').keydown(function(){
+    jQuery(this).content_count_down();
+  })
+
+jQuery('.delete-post').click(function(){
+  jQuery.ajax({
+    type: "DELETE",
+    url: jQuery(this).href(),
+    dataType: 'json',
+    success: function(data) {
+      jQuery('#feed_item_list').html(data);
+    }
+  });
+});*/
+
+})

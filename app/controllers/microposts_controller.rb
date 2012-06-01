@@ -15,8 +15,17 @@ class MicropostsController < ApplicationController
   
   
   def destroy
+    @user = @micropost.user
     @micropost.destroy
-    redirect_to root_path
+    respond_to do |format|
+     format.html do
+       redirect_to root_path
+     end
+#     format.js do
+#       @feed_items = current_user.microposts.paginate(page: params[:page])
+#       render :partial => 'shared/feed'
+#     end
+    end
   end
 
   private
